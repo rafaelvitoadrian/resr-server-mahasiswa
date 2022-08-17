@@ -85,7 +85,7 @@ class Mahasiswa extends ResourceController
             $data = [
                 'id' => $id,
                 'nama' => $this->request->getVar('nama'),
-                'nim' => $this->request->getVar('nama')
+                'nim' => $this->request->getVar('nim')
             ];
 
             if($fileNama != ''){
@@ -120,13 +120,14 @@ class Mahasiswa extends ResourceController
 
     public function delete($id = null)
     {
-
         $data = $this->mahasiswaModel->where('id',$id)->first();
         $gambar = $data['gambar'];
         if (!$data) {
             return $this->fail('data mungkin sudah tidak ada atau sudah diubah');
         }else{
-            unlink('test/api/'. $gambar);
+            if (!$gambar) {
+                unlink('test/api/'. $gambar);
+            }
             $data = $this->mahasiswaModel->delete($id);
             return $this->respondDeleted($data, 201);
         }
